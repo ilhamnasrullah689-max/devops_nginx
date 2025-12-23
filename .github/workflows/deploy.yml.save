@@ -1,6 +1,0 @@
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup SSH
-    

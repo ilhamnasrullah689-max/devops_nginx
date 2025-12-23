@@ -1,4 +1,4 @@
-# trigger ci cd
+nano # trigger ci cd
 
 #!/bin/bash
 
