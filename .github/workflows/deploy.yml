@@ -20,21 +20,19 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no 
-ilhamnsrllh@SERVER_IP << 'EOF'
-            cd ~/devops
+          ssh -o StrictHostKeyChecking=no ilhamnsrllh@SERVER_IP << 'EOF'
+          cd ~/devops
 
-            NAME=nginx_staging
-            PORT=8082
-            APP=app-staging
+          NAME=nginx_staging
+          PORT=8082
+          APP=app-staging
 
-            podman stop $NAME 2>/dev/null || true
-            podman rm $NAME 2>/dev/null || true
+          podman stop $NAME 2>/dev/null || true
+          podman rm $NAME 2>/dev/null || true
 
-            podman run -d \
-              --name $NAME \
-              -p $PORT:80 \
-              -v $(pwd)/$APP:/usr/share/nginx/html:ro \
-              nginx
+          podman run -d \
+            --name $NAME \
+            -p $PORT:80 \
+            -v $(pwd)/$APP:/usr/share/nginx/html:ro \
+            nginx
           EOF
-
