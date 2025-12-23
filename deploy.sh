@@ -1,3 +1,5 @@
+# trigger ci cd
+
 #!/bin/bash
 
 ENV=${1:-staging}
