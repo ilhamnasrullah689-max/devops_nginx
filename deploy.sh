@@ -1,14 +1,16 @@
 #!/bin/bash
-echo "=== CI/CD PIPELINE START ==="
 
-echo "Pulling latest code..."
-git pull origin main 2>/dev/null || echo "Local repo"
+ENV=${1:-staging}
 
-echo "Stopping old container..."
-./stop_nginx.sh
+echo "=== CI/CD PIPELINE START ($ENV) ==="
 
-echo "Starting new container..."
-./start_nginx.sh
+echo "📥 Pulling latest code..."
+git pull origin main 2>/dev/null || echo "Local repo (no remote)"
 
-echo "=== DEPLOYMENT DONE ==="
+echo "🛑 Stopping old container..."
+./stop_nginx.sh $ENV
 
+echo "🚀 Starting new container..."
+./start_nginx.sh $ENV
+
+echo "=== DEPLOYMENT DONE ($ENV) ==="

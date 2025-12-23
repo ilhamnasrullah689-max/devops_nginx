@@ -12,3 +12,4 @@ podman stop $NAME 2>/dev/null
 podman rm $NAME 2>/dev/null
 
 echo "🧹 Container $NAME stopped & removed"
+
