@@ -1,15 +1,38 @@
-#!/bin/bash
+name: Deploy Nginx with Podman
 
-ENV=${1:-staging}
+on:
+  push:
+    branches:
+      - main
 
-if [ "$ENV" = "prod" ]; then
-  NAME=nginx_prod
-else
-  NAME=nginx_staging
-fi
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
 
-podman stop $NAME 2>/dev/null
-podman rm $NAME 2>/dev/null
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-echo "🧹 Container $NAME stopped & removed"
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Deploy to Server
+        run: |
+          ssh -o StrictHostKeyChecking=no user@SERVER_IP << 'EOF'
+            cd ~/devops
+
+            NAME=nginx_staging
+            PORT=8082
+            APP=app-staging
+
+            podman stop $NAME 2>/dev/null || true
+            podman rm $NAME 2>/dev/null || true
+
+            podman run -d \
+              --name $NAME \
+              -p $PORT:80 \
+              -v $(pwd)/$APP:/usr/share/nginx/html:ro \
+              nginx
+          EOF
